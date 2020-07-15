@@ -1,0 +1,13 @@
+# Question 3
+---------------------------------------------------------------------
+- *Created structs for **PremierCabs, PoolCabs, Riders and Servers***.
+- *Created  threads for each Rider and each Server*.
+- *For each Rider thread, the RiderThread function is called where we get the preferences of the rider i.e. cab type, ride time, wait time and arrival time.*
+- *For each server, there is a flag to see if it is busy or not.*
+- *We then wait in each thread if arrival time for the rider has arrived or not.* 
+- ***Book  Cab***: *Once the rider does, we iterate over all the Share/Premier Cabs depending in the rider's preference.* 
+- ***Accept Ride*** *:Once an available cab is found, it's state is changed. Note that the cab assignment is done inside a mutex so as to make sure no two riders can be assigned to the same cab at the same time creating a case of conflicting states.*
+- ***On Ride*** *:In this case for each rider we see if the difference between the current time and time of arrival of the rider and check if the rider has reached the destination or not*
+- ***End Ride*** *:As soon as the difference of current time and time of arrival is greater than the ride time, the ride is ended i.e. the state of the cab is changed accordingly and the payment is initialized. The state of thr cab is changed inside a mutex especially for a shared cab since both it's riders can end the ride together.The rider iterates through all the servers to find a server which is not busy. As soon as an available server is found, it's flag is changed and changed to busy inside a mutex.*
+- ***Accept Payment and MakePayment*** *:In each server thread, we check if the server is busy or not. In case it is busy, we see which rider is using it and accept payment from that, thereby changing the rider's payment status to True and changing the status of the server back to available after 2 seconds(inside a mutex).*
+- *After the payment status becomes true, a value is returned from the rider thread and the server threads continue to run. We also keep a flag to check if all riders have paid or not. Once all riders have paid we set the flag which then returns from all the server threads as well thereby ending the simulation.*
